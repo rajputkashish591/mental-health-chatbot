@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mental Health Chatbot</title>
+</head>
+<body>
+
+<h1>Mental Health Chatbot</h1>
+
+<input type="text" id="message" placeholder="Type message">
+<button onclick="sendMessage()">Send</button>
+
+<div id="chat"></div>
+
+<script>
+async function sendMessage() {
+
+    let message = document.getElementById("message").value;
+
+    let response = await fetch("/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type":"application/json"
+        },
+        body: JSON.stringify({
+            message: message
+        })
+    });
+
+    let data = await response.json();
+
+    document.getElementById("chat").innerHTML +=
+        "<p><b>You:</b> " + message + "</p>" +
+        "<p><b>Bot:</b> " + data.reply + "</p>" +
+        "<p><b>Sentiment:</b> " + data.sentiment + "</p>";
+
+    if(data.emergency){
+        document.getElementById("chat").innerHTML +=
+        "<p>⚠️ EMERGENCY ALERT DETECTED</p>";
+    }
+}
+</script>
+
+</body>
+</html>
